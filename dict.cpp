@@ -6,6 +6,7 @@
 #include <unordered_set>
 #include "grammarFragment.h"
 
+#include "utility.h"
 
 
 struct NiaveWordChains
@@ -39,7 +40,7 @@ struct NiaveWordChains
 
 
 
-void buildDict (const char* file)
+void buildDict (const char* file, GrammarGraph& graph)
 {
 	std::ifstream in; 
 	in.open(file); 
@@ -82,15 +83,33 @@ void buildDict (const char* file)
 
 	}
 
-	std::string start = "hello";
+	std::string start = graph.randomWord("$precure");
 	std::cout << start << ' ';
+	int i = 0;
 	while (true)
 	{
-		const auto find = chains.getWord(start);
-		if(!find) break; 
+		auto find = chains.getWord(start);
+		auto found = find;
 
+		if(!find)
+		{
+			const auto search = graph.cat(start);
+			if(search)
+			{
+				//find = search;
+				find = chains.getWord(*search);
+				found = *search;
+			}
+			else  
+			{
+				break;
+			}
+		}
+		if((*find)[0] == '$') find =  graph.randomWord(*find);
+
+		if(i++ > randInt(10, 20)) break;
+		start = randInt(0, 1)  && chains.getWord(*find) ? *find : *found;
 		std::cout << *find << ' ' ; 
-		start = *find; 
 	}
 	std::cout << '\n';
 }
@@ -105,7 +124,7 @@ GrammarGraph buildGraph (const char* file)
 	std::string line;
 	while (std::getline(in, line))
 	{
-		if(line[0] == '!')
+		if(line[0] == '$')
 		{
 			std::string previousWord;
 			std::string word;
@@ -151,7 +170,7 @@ GrammarGraph buildGraph (const char* file)
 			return key;
 		};
 
-		if(line[0] != '!')
+		if(line[0] != '$')
 		{
 			std::string key = getKey(line);
 			std::string word;
@@ -168,7 +187,8 @@ GrammarGraph buildGraph (const char* file)
 
 				if(word.length() && a == ',')
 				{
-					graph.insertWord(key, word);
+					std::string t = "$" + key;
+					graph.insertWord(t, word);
 					word = "";
 					continue;
 				}
@@ -177,6 +197,7 @@ GrammarGraph buildGraph (const char* file)
 			}
 				if(word.length())
 				{
+					std::string t = "$" + key;
 					graph.insertWord(key, word);
 					continue;
 				}
@@ -198,9 +219,10 @@ int main (int argc, char** argv)
 	}
 
 	auto graph = buildGraph(argv[2]);
-	buildDict (argv[1]);
-	srand(time(nullptr));
-
-	std::cout << graph.randomWord("!word") << std::endl;
+//graph.dumpFile("$verb","/tmp/verbs.txt");
+//	graph.dumpFile("$noun","/tmp/nouns.txt");
+//	graph.dumpFile("$adjective","/tmp/adjectives.txt");
+//	graph.dumpFile("$adverb","/tmp/adverbs.txt");
+	buildDict (argv[1], graph);
 }
 
