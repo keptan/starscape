@@ -55,30 +55,32 @@ struct GrammarNode
 		int s = words.size(); 
 		for(const auto c : children)
 		{
-			 s += c->size();
+			s += c->size();
 		}
+		return s;
 	}
 
 	std::string operator[] (const int i) const
 	{
+		std::cout << i << ' ' << words.size() << ' ' << size() << std::endl;
 		if(i < words.size()) return *select_randomly(words.begin(), words.end());
-		int acc = words.size();
+		int acc = words.size() -1;
 
 		for(const auto c : children)
 		{
-			acc += c->size();
+			acc += (c->size());
 			const auto& g = *c;
 			if(acc >= i) return g[acc - i];
 		}
 		throw("acc didnt acc");
 	}
 
-	/*
-	std::optional<std::string>
+	std::string
 	getRandom (void)
 	{
-		std::string<vector
-	*/
+		const int choice = randInt(0, size() -1);
+		return (*this)[choice];
+	}
 
 };
 
@@ -100,7 +102,7 @@ class GrammarGraph
 	graph; 
 
 
-	std::shared_ptr<GrammarNode> getNode (const std::string& k)
+	std::shared_ptr<GrammarNode> getNode (const std::string& k) 
 	{
 		const auto it = graph.find(k);
 		if(it != graph.end()) return it->second;
@@ -135,8 +137,8 @@ class GrammarGraph
 			return;
 		}
 
-		parent->insertChild(child);
 		child->insertParent(parent);
+		parent->insertChild(child);
 		return;
 	}
 
@@ -149,19 +151,23 @@ class GrammarGraph
 	void test (const std::string& str)
 	{
 		const auto node = getNode(str);
-		const auto& children = node->getChildren();
-		const auto& parents  = node->getParents();
 
-		for(const auto& c : children)
+		for(const auto& c : node->children)
 		{
 			std::cout << c->res << std::endl;
 		}
 
 
-		for(const auto& p : parents)
+		for(const auto& p : node->parents)
 		{
 			std::cout << p->res << std::endl;
 		}
+	}
+
+	std::string randomWord (const std::string& key)
+	{
+		const auto node = getNode(key);
+		return node->getRandom();
 	}
 
 };
