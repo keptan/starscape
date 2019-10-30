@@ -1,7 +1,8 @@
 #include <memory>
 #include <unordered_set>
+#include "utility.h"
 
-class GrammarNode
+struct GrammarNode
 {
 	std::unordered_set< std::shared_ptr<GrammarNode>> 
 	children;
@@ -12,7 +13,6 @@ class GrammarNode
 	std::unordered_set< std::string>
 	words;
 
-	public:
 	using SharedNode = std::shared_ptr<GrammarNode>;
 	const std::string res;
 
@@ -49,6 +49,14 @@ class GrammarNode
 	{
 		return parents;
 	}
+
+	/*
+	std::optional<std::string>
+	getRandom (void)
+	{
+		std::string<vector
+	*/
+
 };
 
 namespace std 
@@ -81,10 +89,28 @@ class GrammarGraph
 
 	public:
 
+	bool upSearch (const std::shared_ptr<GrammarNode> node, const std::string& key)
+	{
+		if(node->res == key) return true;
+		if(node->parents.size() == 0) return false; 
+		for(const auto p : node->parents)
+		{
+			if(upSearch(p, key)) return true;
+		}
+		return false; 
+	}
+
+
 	void insertRelation (const std::string& key, const std::string& word)
 	{
 		const auto parent = getNode(key);
 		const auto child =  getNode(word);
+
+		if(upSearch(parent, word))
+		{
+			std::cout << "avoided cycle" << std::endl;
+			return;
+		}
 
 		parent->insertChild(child);
 		child->insertParent(parent);
@@ -96,7 +122,6 @@ class GrammarGraph
 		const auto node = getNode(key);
 		node->insertWord(word);
 	}
-
 
 	void test (const std::string& str)
 	{
@@ -115,6 +140,7 @@ class GrammarGraph
 			std::cout << p->res << std::endl;
 		}
 	}
+
 };
 
 
