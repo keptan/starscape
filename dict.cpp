@@ -5,6 +5,8 @@
 #include <optional>
 #include  <random>
 #include  <iterator>
+#include <unordered_set>
+#include "grammarFragment.h"
 
 template<typename Iter, typename RandomGenerator>
 Iter select_randomly(Iter start, Iter end, RandomGenerator& g) {
@@ -65,7 +67,7 @@ void buildDict (const char* file)
 		std::string word;
 		for(const auto a : line)
 		{
-			if(a == ' ' || a == '\n')
+			if(a == ' ')
 			{
 				if(word.length() && previousWord.length())
 				{
@@ -85,6 +87,13 @@ void buildDict (const char* file)
 
 			word += a; 
 		}
+		if(word.length() && previousWord.length())
+		{
+			chains.insert(previousWord, word); 
+			previousWord = word;
+			word = "";
+		}
+
 	}
 
 	std::string start = "hello";
@@ -100,15 +109,108 @@ void buildDict (const char* file)
 	std::cout << '\n';
 }
 
+GrammarGraph buildGraph (const char* file)
+{
+
+	GrammarGraph graph; 
+	std::ifstream in;
+	in.open(file);
+
+	std::string line;
+	while (std::getline(in, line))
+	{
+		if(line[0] == '!')
+		{
+			std::string previousWord;
+			std::string word;
+
+			for(const auto a : line)
+			{
+				if(a == '-')
+				{
+					if(word.length() && previousWord.length())
+					{
+						graph.insertRelation(previousWord, word);
+						previousWord = word;
+						word = "";
+						continue;
+					}
+
+					if(word.length())
+					{
+						previousWord = word;
+						word = "";
+						continue;
+					}
+				}
+				word += a;
+			}
+			if(word.length() && previousWord.length())
+			{
+				graph.insertRelation(previousWord, word);
+				previousWord = word;
+				word = "";
+			}
+
+		}
+
+		const auto getKey = [](const auto& s)
+		{
+			std::string key; 
+			for(const auto c : s)
+			{
+				if(c == ':') break;
+				key += c; 
+			}
+			return key;
+		};
+
+		if(line[0] != '!')
+		{
+			std::string key = getKey(line);
+			std::string word;
+			bool stripped;
+			for(const auto a : line)
+			{
+				if(a == ':') 
+				{
+					stripped = true;
+					continue;
+				}
+
+				if(!stripped) continue;
+
+				if(word.length() && a == ',')
+				{
+					graph.insertWord(key, word);
+					continue;
+				}
+
+				word += a;
+			}
+				if(word.length())
+				{
+					graph.insertWord(key, word);
+					continue;
+				}
+		}
+	}
+
+	return graph;
+}
+					
+
+
 
 int main (int argc, char** argv)
 {
 	if (argc < 2)
 	{
-		std::cerr << "Usage:" << argv[0] << " text file" << std::endl;
+		std::cerr << "Usage:" << argv[0] << " text file" << ' ' << "dict file" << std::endl;
 		return -1;
 	}
 
+	const auto graph = buildGraph(argv[2]);
 	buildDict (argv[1]);
 }
 
