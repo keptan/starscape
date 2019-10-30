@@ -50,6 +50,29 @@ struct GrammarNode
 		return parents;
 	}
 
+	int size (void) const
+	{
+		int s = words.size(); 
+		for(const auto c : children)
+		{
+			 s += c->size();
+		}
+	}
+
+	std::string operator[] (const int i) const
+	{
+		if(i < words.size()) return *select_randomly(words.begin(), words.end());
+		int acc = words.size();
+
+		for(const auto c : children)
+		{
+			acc += c->size();
+			const auto& g = *c;
+			if(acc >= i) return g[acc - i];
+		}
+		throw("acc didnt acc");
+	}
+
 	/*
 	std::optional<std::string>
 	getRandom (void)
