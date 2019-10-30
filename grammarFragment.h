@@ -62,7 +62,6 @@ struct GrammarNode
 
 	std::string operator[] (const int i) const
 	{
-		std::cout << i << ' ' << words.size() << ' ' << size() << std::endl;
 		if(i < words.size()) return *select_randomly(words.begin(), words.end());
 		int acc = words.size() -1;
 
@@ -125,6 +124,26 @@ class GrammarGraph
 		return false; 
 	}
 
+	std::optional<std::string> cat (const std::string& word)
+	{
+		const auto node = getNode("$word");
+		return cat(node, word);
+	}
+
+	std::optional<std::string> cat (std::shared_ptr<GrammarNode> node, const std::string& w)
+	{
+		const auto it = node->words.find(w); 
+		if(it != node->words.end()) return node->res; 
+
+		for(const auto c : node->children)
+		{
+			const auto search = cat(c, w);
+			if(search) return search;
+		}
+		return std::nullopt;
+	}
+
+
 
 	void insertRelation (const std::string& key, const std::string& word)
 	{
@@ -166,8 +185,17 @@ class GrammarGraph
 
 	std::string randomWord (const std::string& key)
 	{
-		const auto node = getNode(key);
+		std::string s = key[0] == '$' ? key : "$" + key;
+		const auto node = getNode(s);
 		return node->getRandom();
+	}
+
+	void dumpFile (const std::string& key, const std::string& filename)
+	{
+		std::ifstream in;
+		in.open(filename);
+		std::string line; 
+		while(std::getline(in, line)) insertWord(key, line);
 	}
 
 };
