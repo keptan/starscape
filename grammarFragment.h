@@ -1,3 +1,4 @@
+#include <cctype>
 #include <memory>
 #include <unordered_set>
 #include "utility.h"
@@ -111,6 +112,14 @@ class GrammarGraph
 		return ptr;
 	}
 
+	std::shared_ptr<GrammarNode> node (const std::string& k)
+	{
+		const auto it = graph.find(k);
+		if(it == graph.end()) return nullptr; 
+
+		return it->second;
+	}
+
 	public:
 
 	bool upSearch (const std::shared_ptr<GrammarNode> node, const std::string& key)
@@ -186,9 +195,47 @@ class GrammarGraph
 	std::string randomWord (const std::string& key)
 	{
 		std::string s = key[0] == '$' ? key : "$" + key;
-		const auto node = getNode(s);
-		return node->getRandom();
+		const auto n = node(s);
+		if(!n) 
+		{ 
+			std::cerr << "No nodes for " << key << std::endl;
+			throw; 
+		}
+		if(!n->size())
+		{
+			std::cerr << "node has no members! " << key << std::endl;
+			throw;
+		}
+		return n->getRandom();
 	}
+
+	std::string recursiveBuild (const std::string& string)
+	{
+		std::string out; 
+
+		std::string word; 
+		bool send = false;
+		for(const auto c : string)
+		{
+			if(word.length() == 0 && c == '$') send = true; 
+			if(word.length() && c == ' ') 
+			{
+				out += send ? recursiveBuild(randomWord(word)) : word; 
+				out += ' ';
+				send = false; 
+				word = "";
+				continue; 
+			}
+			if(c != ' ')  word += c; 
+		}
+
+		out += send ? recursiveBuild(randomWord(word)) : word; 
+
+		return out;
+	}
+
+
+
 
 	void dumpFile (const std::string& key, const std::string& filename)
 	{
