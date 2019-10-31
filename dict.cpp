@@ -83,32 +83,15 @@ void buildDict (const char* file, GrammarGraph& graph)
 
 	}
 
-	std::string start = graph.randomWord("$precure");
+	std::string start = graph.randomWord("$opening");
 	std::cout << start << ' ';
 	int i = 0;
 	while (true)
 	{
 		auto find = chains.getWord(start);
-		auto found = find;
+		start = *find; 
 
-		if(!find)
-		{
-			const auto search = graph.cat(start);
-			if(search)
-			{
-				//find = search;
-				find = chains.getWord(*search);
-				found = *search;
-			}
-			else  
-			{
-				break;
-			}
-		}
 		if((*find)[0] == '$') find =  graph.randomWord(*find);
-
-		if(i++ > randInt(10, 20)) break;
-		start = randInt(0, 1)  && chains.getWord(*find) ? *find : *found;
 		std::cout << *find << ' ' ; 
 	}
 	std::cout << '\n';
@@ -198,7 +181,7 @@ GrammarGraph buildGraph (const char* file)
 				if(word.length())
 				{
 					std::string t = "$" + key;
-					graph.insertWord(key, word);
+					graph.insertWord(t, word);
 					continue;
 				}
 		}
@@ -219,10 +202,11 @@ int main (int argc, char** argv)
 	}
 
 	auto graph = buildGraph(argv[2]);
+	std::cout << graph.recursiveBuild("$opening $middle $closing") << std::endl;
 //graph.dumpFile("$verb","/tmp/verbs.txt");
 //	graph.dumpFile("$noun","/tmp/nouns.txt");
 //	graph.dumpFile("$adjective","/tmp/adjectives.txt");
 //	graph.dumpFile("$adverb","/tmp/adverbs.txt");
-	buildDict (argv[1], graph);
+	//buildDict (argv[1], graph);
 }
 
