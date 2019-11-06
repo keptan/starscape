@@ -3,6 +3,11 @@
 #include <unordered_set>
 #include "utility.h"
 
+//graph node
+//contains an arbitrary number of parents, children, and words
+//acts as a category 
+//for example 'verb' has the child node 'attacks', 
+//but also contains an assortment of verbs directly
 struct GrammarNode
 {
 	std::unordered_set< std::shared_ptr<GrammarNode>> 
@@ -61,6 +66,7 @@ struct GrammarNode
 		return s;
 	}
 
+	//choses either from current words or from this nodes children
 	std::string operator[] (const int i) const
 	{
 		if(i < words.size()) return *select_randomly(words.begin(), words.end());
@@ -75,13 +81,13 @@ struct GrammarNode
 		throw("acc didnt acc");
 	}
 
+	//selects a random word, from this node or from its children
 	std::string
 	getRandom (void)
 	{
 		const int choice = randInt(0, size() -1);
 		return (*this)[choice];
 	}
-
 };
 
 namespace std 
@@ -96,12 +102,14 @@ namespace std
 		};
 }
 
+//builds and manages an acyclical directed graph of grammar nodes 
 class GrammarGraph
 {
 	std::unordered_map<std::string, std::shared_ptr<GrammarNode>> 
 	graph; 
 
 
+	//creates a node if it doesn't exist, or retrieves an existing node 
 	std::shared_ptr<GrammarNode> getNode (const std::string& k) 
 	{
 		const auto it = graph.find(k);
@@ -112,6 +120,7 @@ class GrammarGraph
 		return ptr;
 	}
 
+	//same as above but returns a nullptr instead of silently creating a node
 	std::shared_ptr<GrammarNode> node (const std::string& k)
 	{
 		const auto it = graph.find(k);
@@ -122,6 +131,7 @@ class GrammarGraph
 
 	public:
 
+	//searches parents of a node 
 	bool upSearch (const std::shared_ptr<GrammarNode> node, const std::string& key)
 	{
 		if(node->res == key) return true;
@@ -133,12 +143,14 @@ class GrammarGraph
 		return false; 
 	}
 
+	//depth first recursive search, uses helper function
 	std::optional<std::string> cat (const std::string& word)
 	{
 		const auto node = getNode("$word");
 		return cat(node, word);
 	}
 
+	//searches res and children for a string 
 	std::optional<std::string> cat (std::shared_ptr<GrammarNode> node, const std::string& w)
 	{
 		const auto it = node->words.find(w); 
@@ -152,8 +164,8 @@ class GrammarGraph
 		return std::nullopt;
 	}
 
-
-
+	//inserts a relation
+	//such as nouns -> people -> girls
 	void insertRelation (const std::string& key, const std::string& word)
 	{
 		const auto parent = getNode(key);
@@ -170,12 +182,15 @@ class GrammarGraph
 		return;
 	}
 
+	//inserts a word into a node
+	//for example "hello" inserted into "greetings"
 	void insertWord (const std::string& key, const std::string& word)
 	{
 		const auto node = getNode(key);
 		node->insertWord(word);
 	}
 
+	//prints the contents of a node 
 	void test (const std::string& str)
 	{
 		const auto node = getNode(str);
@@ -192,6 +207,7 @@ class GrammarGraph
 		}
 	}
 
+	//finds a random word from a category
 	std::string randomWord (const std::string& key)
 	{
 		std::string s = key[0] == '$' ? key : "$" + key;
@@ -209,6 +225,10 @@ class GrammarGraph
 		return n->getRandom();
 	}
 
+	//recursively builds a string from a category
+	//for example $character said $greeting
+	//would be expanded into 'ben said hello'
+	//or similiar 
 	std::string recursiveBuild (const std::string& string)
 	{
 		std::string out; 
@@ -234,9 +254,8 @@ class GrammarGraph
 		return out;
 	}
 
-
-
-
+	//dumps a file into a category
+	//can dump a file of verbs into the verb category for example 
 	void dumpFile (const std::string& key, const std::string& filename)
 	{
 		std::ifstream in;

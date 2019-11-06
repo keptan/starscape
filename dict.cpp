@@ -5,10 +5,10 @@
 #include <optional>
 #include <unordered_set>
 #include "grammarFragment.h"
-
 #include "utility.h"
 
-
+//niave markov chains
+//just remembers adjacency 
 struct NiaveWordChains
 {
 	std::unordered_map<std::string, std::vector<std::string>> 
@@ -37,8 +37,6 @@ struct NiaveWordChains
 	}
 
 };
-
-
 
 void buildDict (const char* file, GrammarGraph& graph)
 {
@@ -97,6 +95,7 @@ void buildDict (const char* file, GrammarGraph& graph)
 	std::cout << '\n';
 }
 
+//build graph from a file
 GrammarGraph buildGraph (const char* file)
 {
 
@@ -191,8 +190,6 @@ GrammarGraph buildGraph (const char* file)
 }
 					
 
-
-
 int main (int argc, char** argv)
 {
 	if (argc < 2)
@@ -209,4 +206,3 @@ int main (int argc, char** argv)
 //	graph.dumpFile("$adverb","/tmp/adverbs.txt");
 	//buildDict (argv[1], graph);
 }
-
