@@ -1,0 +1,20 @@
+$word-$verb-$attack
+$word-$noun-$people-$precure
+$word-$noun-$location
+$word-$verb-$activity
+$word-$noun-$organization
+$word-$adverb
+$word-$adjective
+$word-$opening
+attack:blasted,zapped,owned
+verb:ran,looked,farted,blinked,jumped
+word:clown,word,alphabet,dog
+precure:Lala,Hikaru,Blue Cat,Elena,Madoka,Kapardo,Eyewon,Notraiders,Reiymu,Mio,Lala,Hikaru-san,Lala-sama,Lala-san,Hikaru-chan
+location:Earth,Mars,Space,Lala's Spaceship,Japan,The UN Headquarters,a jungle,deep space,Lala's homeworld
+verb:ran,looked,punched,flew,attacked,exploded,investigated,ate,smelled,examined,considered,thought about,fixed,repaired,destroyed,touched,felt
+noun:alien,gun,space ship,laser,table,chair,rocket ship,Lala's rocket ship,book,drink,food,doughnut,skeleton,slime
+activity:having a picnic,running away,hiding out,playing,relaxing,thinking,study,studying,presiding over,adventuring,exploring,searching space
+organization:the UN,FBI,CIA,Starscape alliance,precures,earth,cops,space cops,thieves,pirates,Notraiders,peace accords,the church
+adverb:gently,carefully,gingerly,dangerously,carelessly
+adjective:happy,scared,hot,cold,small,big,fast,slow
+
