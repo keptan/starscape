@@ -1,0 +1,86 @@
+opening: $source $MainCharacter is $location $action $with
+middle:  $connector $MainCharacter is $action
+middle:  $connector $MainCharacter is $location
+middle:  $connector $source $LalaDescription .
+end:	 $closing
+end:     $hook
+
+source: The report claims, Informants $method, The latest rumors $method 
+source: local stargazers $method, observatories $method, intelligence $method
+source: $precure $method, It seems that, It's apparent that
+source: Data suggests, Measurements seem to show
+
+method: reports, says, suggests, announced, said, declares, hints, seem to show
+
+connector: ;however
+connector: ;also
+connector: ;otherwise
+connector: ;while $source 
+connector: ;on the other hand
+connector: ;but
+connector: ;earlier
+connector: ;after
+connector: ;even though
+
+location: $location via $location, in deep space, somewhere in the alpha-quadrant
+location: at her homeworld, at the UN, back home, in her spaceship, in a desert
+location: in a jungle, somewhere, in space, in earths orbit, on the moon, on mars
+location: near jupiter, near saturn, near the gamma quadrant, at $precure 's house
+location: in iceland, in a time vortex, in a wormhole 
+location: in asia, in an ice field, at work, at the doughnut shop, at a cafe, in tokyo
+location: at taco bell
+
+MainCharacter: Lala, Lala-sama, Lala-san, Hikaru 
+
+precure: Hikaru, Elena, Madoka, Blue-cat
+
+characters: Prunce, Kapardo, Eyewon, citizens of earth, aliens, an alien, dark forces
+characters: notraiders, Illyasviel, The President
+
+action:on a date with $precure, hugging $precure, kissing $precure 
+action: relaxing with $precure, having a picnic, fighting robots, battling evil 
+action: counseling, teaching, relaxing, exploring, searching for her $magicalObjects 
+action: hiding, battling $characters, fighting $characters, arguing with $characters 
+action: discussing $magicalObjects with $characters
+action: addressing $organization, admiring $precure, studying $precure, helping $organization
+action: dismantling $organization, destroying $organization
+action: vivisecting $characters, disecting $characters
+action: competing, running a marathon, showing off, exhibiting her powers, touring
+action: meditating, writing $book, studying, doing archeology
+action: helping $organization, reading $book, presenting $book to $organization
+
+book: a novel, her diary, poetry, a scientific paper, magical tomes, a recipe
+
+LalaDescription: Lala is beautiful, Lala's wearing a $clothes, Lala is missing her $clothes ! 
+LalaDescription: Lala's $clothes are really cute today, Lala's $feeling recently 
+LalaDescription: Lala's $feeling today, Lala is extra powerful today, Lala is missing her $magicalObjects
+LalaDescription: Lala is enjoying her $magicalObjects, Lala is enjoying her time with $precure
+LalaDescription: Lala is blushing cutely, Lala is glowing, Lala is shining, Lala is smiling, Lala is posing
+LalaDescription: Lala is dressed up today, Lala is showing off her new $clothes
+
+related: 
+
+closing: . Lala could also be,. We're still grateful that Lala,. We're still recovering from when Lala 
+closing: .We wish Lala the greatest luck in,. We're all praying for Lala,. Goodluck to Lala,. Also Lala,. Lala 
+closing: .Next is more reporting on lala:,. Now for more Lala news,. Next on Lala news,. Next on our Lala report
+
+hook: Our next report has more on Lala, Further reporting on Lala follows 
+hook: Our Lala expert is here to tell us more, $precure has some more info
+
+with: Using her magical girl powers, along with $precure, with her twinkle stick
+with: without being transformed, in her ultimate form, with her spaceship, with help from her AI, angrily, happily, sadly, gingerly
+with: despsite objections from $organization, despite missing her $magicalObjects, despite $organization resistance
+with: even though $characters is $action
+
+magicalObjects: twinkle sticks, magic wand, flying broom, nanobots, nanomachines, holograms, spaceship
+
+clothes: yellow socks, school uniform, magical girl outfit, feelers, expression, posture, shoes
+clothes: loafers, space loafers, hair style, eyes, rosy cheeks, smile, nail polish, perfume
+
+feeling: feeling happy, feeling cute, happy, smiling, anxious, looking anxious, worried, calm
+feeling: looks calm, powerful, looks powerful, looks dangerous, looks harried, looks hurt, looks content
+feeling: content, relaxed, confident, feeling confident, determined, extra determined, angry, righteous
+feeling: furious, glowing, shining, confused, lost
+
+organization: the UN, the FBI, the CIA, the Starscape alliance, precures, the earth, the cops, the space cops, thieves
+organization: pirates, Notraiders, the peace accords, the church
